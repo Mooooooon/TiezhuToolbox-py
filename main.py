@@ -8,6 +8,7 @@ from item import Item
 from ui import SmithUI
 from drag import DraggableWidget
 import sys
+import os
 
 
 class MainWindow(QMainWindow):
@@ -16,6 +17,13 @@ class MainWindow(QMainWindow):
         self.adb = ADB()
         self.ocr = PaddleOCR()
         self.initUI()
+
+    def __del__(self):
+        # 删除 screenshot.png、adbkey 和 adbkey.pub 文件
+        files_to_delete = ["screenshot.png", "adbkey", "adbkey.pub"]
+        for file_name in files_to_delete:
+            if os.path.exists(file_name):
+                os.remove(file_name)
 
     def initUI(self):
         self.setFixedSize(400, 430)
