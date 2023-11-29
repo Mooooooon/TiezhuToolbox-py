@@ -1,0 +1,10 @@
+screenshot.png
+adbkey.pub
+adbkey
+__pycache__/adb.cpython-39.pyc
+__pycache__/drag.cpython-39.pyc
+__pycache__/image.cpython-39.pyc
+__pycache__/item.cpython-39.pyc
+__pycache__/ocr.cpython-39.pyc
+__pycache__/ui.cpython-39.pyc
+__pycache__/worker.cpython-39.pyc
