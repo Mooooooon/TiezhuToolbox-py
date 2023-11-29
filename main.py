@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
 
         # 创建主窗口的容器和布局
         self.main_widget = QWidget(self)
+        self.setStyleSheet("background-color: white;")
         main_layout = QVBoxLayout(self.main_widget)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
@@ -103,8 +104,12 @@ class MainWindow(QMainWindow):
     def onConnectionFinished(self, success, message):
         if success:
             self.emulatorUI.resultLabel.setText(message)
+            self.emulatorUI.resultLabel.setStyleSheet(
+                "color: green; font-size: 16px;")  # 成功时设置为绿色
         else:
-            self.emulatorUI.resultLabel.setText(f'连接失败: {message}')
+            self.emulatorUI.resultLabel.setText(f'连接失败')
+            self.emulatorUI.resultLabel.setStyleSheet(
+                "color: red; font-size: 16px;")  # 失败时设置为红色
 
     def takeScreenshot(self):
         # 一旦截图完成，使用PaddleOCR提取文本
@@ -122,32 +127,28 @@ class MainWindow(QMainWindow):
             texts = [item[1][0] for item in texts[0]]
             if len(texts) == 11:
                 first_element = texts.pop(0)
-                leavl = int(first_element[1:])
+                level = int(first_element[1:])
             else:
-                leavl = 0
-            self.emulatorUI.levelLabel.setText(f'强化等级:{leavl}')
+                level = 0
+            self.emulatorUI.levelLabel.setText(f'强化等级：{level}')
             first_element = texts.pop(0)
             part = first_element[2:]
-            self.emulatorUI.partLabel.setText(f'部位:{part}')
+            self.emulatorUI.partLabel.setText(f'部位：{part}')
             last_element = texts.pop()
             suit = ''.join(
                 [char for char in last_element if not char.isdigit() and char not in '（）()/'])
-            self.emulatorUI.suitLabel.setText(f'套装:{suit}')
+            self.emulatorUI.suitLabel.setText(f'套装：{suit}')
             grouped_list = []
             for i in range(0, len(texts), 2):
                 group = texts[i:i+2]
                 grouped_list.append(group)
             score = Item.calculate_score(grouped_list)
-            formatted_score = f'分数: {score:.2f}'
+            formatted_score = f'分数：{score:.2f}'
             self.emulatorUI.scoreLabel.setText(formatted_score)
-            self.emulatorUI.attribute1Label.setText(
-                f'{grouped_list[0][0]}:{grouped_list[0][1]}')
-            self.emulatorUI.attribute2Label.setText(
-                f'{grouped_list[1][0]}:{grouped_list[1][1]}')
-            self.emulatorUI.attribute3Label.setText(
-                f'{grouped_list[2][0]}:{grouped_list[2][1]}')
-            self.emulatorUI.attribute4Label.setText(
-                f'{grouped_list[3][0]}:{grouped_list[3][1]}')
+            for i in range(4):
+                label = getattr(self.emulatorUI, f'attribute{i + 1}Label')
+                label.setText(f'{grouped_list[i][0]}: {grouped_list[i][1]}')
+
         else:
             self.emulatorUI.resultLabel.setText(f'截图失败: {result}')
 
