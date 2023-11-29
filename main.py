@@ -17,6 +17,7 @@ class MainWindow(QMainWindow):
         self.adb = ADB()
         self.ocr = PaddleOCR()
         self.initUI()
+        self.item = Item()
 
     def __del__(self):
         # 删除 screenshot.png、adbkey 和 adbkey.pub 文件
@@ -119,13 +120,14 @@ class MainWindow(QMainWindow):
             processor = ImageProcessor(result)
             processor.preprocess_for_ocr(0.025, 0.11, 0.29, 0.67)
             processor.erase_area(0, 0, 0.19, 0.1)
-            processor.erase_area(0, 0.1, 1, 0.47)
+            processor.erase_area(0, 0.1, 1, 0.31)
+            processor.erase_area(0, 0.31, 0.1, 0.48)
             processor.erase_area(0, 0.75, 1, 0.9)
             processor.erase_area(0, 0.9, 0.12, 1)
             processor.save(result)
             texts = self.ocr.ocr(result, cls=False)
             texts = [item[1][0] for item in texts[0]]
-            if len(texts) == 11:
+            if len(texts) == 13:
                 first_element = texts.pop(0)
                 level = int(first_element[1:])
             else:
@@ -134,7 +136,13 @@ class MainWindow(QMainWindow):
             first_element = texts.pop(0)
             part = first_element[2:]
             self.emulatorUI.partLabel.setText(f'部位：{part}')
+            first_element = texts.pop(0)
+            primary = first_element
+            first_element = texts.pop(0)
+            primary_value = first_element
             last_element = texts.pop()
+            self.emulatorUI.primaryattributeLabel.setText(
+                f'{primary}：{primary_value}')
             suit = ''.join(
                 [char for char in last_element if not char.isdigit() and char not in '（）()/'])
             self.emulatorUI.suitLabel.setText(f'套装：{suit}')
@@ -142,13 +150,17 @@ class MainWindow(QMainWindow):
             for i in range(0, len(texts), 2):
                 group = texts[i:i+2]
                 grouped_list.append(group)
-            score = Item.calculate_score(grouped_list)
+            score = self.item.calculate_score(grouped_list)
             formatted_score = f'分数：{score:.2f}'
             self.emulatorUI.scoreLabel.setText(formatted_score)
             for i in range(4):
                 label = getattr(self.emulatorUI, f'attribute{i + 1}Label')
                 label.setText(f'{grouped_list[i][0]}: {grouped_list[i][1]}')
-
+            info = self.item.calculate_analysis(
+                level, part, primary, primary_value, grouped_list)
+            self.emulatorUI.itemInfoText.setText(f'强化建议：\n{info}')
+            expectant = self.item.expectant(level, grouped_list) + score
+            self.emulatorUI.itemInfoText.append(f'\n期望分数：\n{expectant:.2f}')
         else:
             self.emulatorUI.resultLabel.setText(f'截图失败: {result}')
 

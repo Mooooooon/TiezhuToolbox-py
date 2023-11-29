@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLineEdit, QPushButton, QLabel, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLineEdit, QPushButton, QLabel, QSizePolicy, QTextEdit
 from PyQt5.QtCore import Qt
 
 
@@ -31,7 +31,7 @@ class SmithUI(QWidget):
         self.screenshotButton.setStyleSheet(
             "border: 1px solid #888888;"  # 设置1px灰色边框
             "background-color: transparent;"  # 设置背景色为透明
-            "color: #00000;"  # 设置文本颜色，可以根据需要修改颜色值
+            "color: #000000;"  # 设置文本颜色，可以根据需要修改颜色值
         )
 
         self.resultLabel = QLabel('尚未链接', self)
@@ -47,6 +47,10 @@ class SmithUI(QWidget):
         self.partLabel = QLabel('', self)
         self.partLabel.setStyleSheet(font_style)
         self.partLabel.setFixedSize(200, 16)
+
+        self.primaryattributeLabel = QLabel('', self)
+        self.primaryattributeLabel.setStyleSheet(font_style)
+        self.primaryattributeLabel.setFixedSize(200, 16)
 
         self.attribute1Label = QLabel('', self)
         self.attribute1Label.setStyleSheet(font_style)
@@ -72,15 +76,15 @@ class SmithUI(QWidget):
         self.suitLabel.setStyleSheet(font_style)
         self.suitLabel.setFixedSize(200, 16)
 
-        self.itemInfoText = QLineEdit(self)
+        self.itemInfoText = QTextEdit(self)
         self.itemInfoText.setPlaceholderText("")
         # 设置文本框为只读
         self.itemInfoText.setReadOnly(True)
         # 设置尺寸策略以允许文本框垂直扩展
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         self.itemInfoText.setSizePolicy(sizePolicy)
-        # 这将使文本框从第一行开始，跨越12行（假设你有12个元素在左侧）
-        self.layout.addWidget(self.itemInfoText, 0, 1, 12, 1)
+        # 这将使文本框从第一行开始
+        self.layout.addWidget(self.itemInfoText, 0, 1, 13, 1)
 
         # 添加控件到布局
         self.layout.addWidget(self.portInput, 0, 0, Qt.AlignLeft | Qt.AlignTop)
@@ -93,17 +97,19 @@ class SmithUI(QWidget):
         self.layout.addWidget(self.levelLabel, 4, 0,
                               Qt.AlignLeft | Qt.AlignTop)
         self.layout.addWidget(self.partLabel, 5, 0, Qt.AlignLeft | Qt.AlignTop)
-        self.layout.addWidget(self.attribute1Label, 6, 0,
+        self.layout.addWidget(self.primaryattributeLabel, 6, 0,
                               Qt.AlignLeft | Qt.AlignTop)
-        self.layout.addWidget(self.attribute2Label, 7, 0,
+        self.layout.addWidget(self.attribute1Label, 7, 0,
                               Qt.AlignLeft | Qt.AlignTop)
-        self.layout.addWidget(self.attribute3Label, 8, 0,
+        self.layout.addWidget(self.attribute2Label, 8, 0,
                               Qt.AlignLeft | Qt.AlignTop)
-        self.layout.addWidget(self.attribute4Label, 9, 0,
+        self.layout.addWidget(self.attribute3Label, 9, 0,
                               Qt.AlignLeft | Qt.AlignTop)
-        self.layout.addWidget(self.scoreLabel, 10, 0,
+        self.layout.addWidget(self.attribute4Label, 10, 0,
                               Qt.AlignLeft | Qt.AlignTop)
-        self.layout.addWidget(self.suitLabel, 11, 0,
+        self.layout.addWidget(self.scoreLabel, 11, 0,
+                              Qt.AlignLeft | Qt.AlignTop)
+        self.layout.addWidget(self.suitLabel, 12, 0,
                               Qt.AlignLeft | Qt.AlignTop)
 
         self.setLayout(self.layout)
