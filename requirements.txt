@@ -1,0 +1,7 @@
+adb_shell==0.4.4
+paddleocr==2.7.0.3
+paddleocr.egg==info
+Pillow==10.0.1
+Pillow==10.1.0
+PyQt5==5.15.10
+PyQt5_sip==12.13.0
